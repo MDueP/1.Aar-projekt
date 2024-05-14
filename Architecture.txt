@@ -1,0 +1,32 @@
+- URL
+	- HTTPS
+		-TLS
+	- Homepage
+		- Login Form
+			- BCrypt
+			- MySQL
+				- Login Failed
+					- Redirect to Homepage
+				- Login Success
+					- Redirect to userpage
+						- Userpage
+						- Subpage for Script form in Navbar
+							- Script Form
+								- Custom forms
+								- Items from a list
+								- Done
+									- Intialize Variables
+										- Blank variables return GET method from HTML
+										- Fixated variables
+											- vmParams from Form
+										- Prompt with: "Are you sure you want to create - $vmname, with $OS, in $resourcegroup ?"
+										- Creation of resourcegroup
+										- Creation of Vnet
+										- Creation of VM
+										- Redirect to loading bar of creation (get the bar from powershell)
+									- Creation of Script
+						- Subpage for done Script
+		
+		- Registration Form
+			- BCrypt
+			- MySQL

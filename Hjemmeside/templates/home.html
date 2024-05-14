@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h2>Home Page</h2>
+
+<p>omg du gjorde det! {{ username }}!</p>
+
+<h3>Graph</h3>
+
+<img src="data:image/png;base64,{{ Graph }}" alt="Graph">
+
+{% endblock %}
