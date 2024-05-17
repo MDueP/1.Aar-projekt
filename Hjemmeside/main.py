@@ -92,4 +92,4 @@ def home():
         return render_template('home.html', username=session['username'], Graph=Graph)
     return redirect(url_for('login'))
         
-app.run(host="0.0.0.0", debug=True, ssl_context='adhoc')
+app.run(host="0.0.0.0", debug=True, ssl_context=('cert.pem', 'key.pem'))
