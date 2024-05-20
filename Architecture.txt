@@ -3,14 +3,14 @@
 		-TLS
 	- Homepage
 		- Login Form
-			- BCrypt
-			- MySQL
+			- BCrypt (Y)
+			- MySQL (Y)
 				- Login Failed
-					- Redirect to Homepage
+					- Redirect to Homepage (Y)
 				- Login Success
-					- Redirect to userpage
+					- Redirect to userpage (Y)
 						- Userpage
-						- Subpage for Script form in Navbar
+						- Subpage for Script form in Navbar (Y)
 							- Script Form
 								- Custom forms
 								- Items from a list

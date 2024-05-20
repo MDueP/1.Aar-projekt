@@ -1,6 +1,6 @@
 import base64
 from io import BytesIO
-from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import MySQLdb.cursors, re
@@ -91,5 +91,10 @@ def home():
     if 'loggedin' in session:
         return render_template('home.html', username=session['username'], Graph=Graph)
     return redirect(url_for('login'))
-        
-app.run(host="0.0.0.0", debug=True, ssl_context=('cert.pem', 'key.pem'))
+
+@app.route('/form')
+def form():
+    if 'loggedin' in session:
+        return render_template('form.html', username=session['username'])
+    
+app.run(host="0.0.0.0", debug=True) #ssl_context=('cert.pem', 'key.pem'))
