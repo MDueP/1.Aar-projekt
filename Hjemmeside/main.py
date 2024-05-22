@@ -1,13 +1,8 @@
-import base64
-from io import BytesIO
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import MySQLdb.cursors, re
-import matplotlib.pyplot as plt
-import matplotlib
 from flask_bcrypt import Bcrypt
-matplotlib.use('agg')
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.secret_key = 'mikkelersej'
@@ -18,18 +13,6 @@ app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'pythonlogin'
 
 mysql = MySQL(app)
-def graph():
-    fig, axd = plt.subplot_mosaic([['upleft', 'right'],
-                               ['lowleft', 'right']], layout='constrained')
-    axd['upleft'].set_title('upleft')
-    axd['lowleft'].set_title('lowleft')
-    axd['right'].set_title('right')
-    buf = BytesIO()
-    fig.savefig(buf, format="png")
-    buf.seek(0)
-    data = base64.b64encode(buf.getvalue()).decode("ascii")
-    plt.close(fig)
-    return data
     
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -87,7 +70,6 @@ def register():
 
 @app.route('/home')
 def home():
-    Graph = graph()
     if 'loggedin' in session:
         return render_template('home.html', username=session['username'], Graph=Graph)
     return redirect(url_for('login'))
@@ -97,4 +79,4 @@ def form():
     if 'loggedin' in session:
         return render_template('form.html', username=session['username'])
     
-app.run(host="0.0.0.0", debug=True) #ssl_context=('cert.pem', 'key.pem'))
+app.run(debug=True) #ssl_context=('cert.pem', 'key.pem')
