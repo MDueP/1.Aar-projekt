@@ -9,16 +9,18 @@
     This is the standard Form for Azure Virtual Machine Creation
 
 
-
+    
       <div class="mb-3">
+        <fieldset class="row mb-3">
+        <legend>Basics</legend>
         <label for="Resource group" class="form-label">Resource group</label>
-        <input type="Resource group" class="form-control">
+        <input type="Resource group" class="form-control" placeholder="Name" required>
       <div class="mb-3">
-        <label for=" Virtual machine name" class="form-label"> Virtual machine name</label>
-        <input type=" Virtual machine name" class="form-control" id="Virtual machine name">
+        <label for=" Virtual machine name" class="form-label"> Virtual machine</label>
+        <input type=" Virtual machine name" class="form-control" id="Virtual machine name" placeholder="Name" required>
       <div class="mb-3 form-check"> 
         <select class="image" aria-label="Default select example">
-            <option selected>image </option>
+            <option selected>Choose Image </option>
             <option value="1">Debian11</option>
             <option value="2">Ubuntu2204</option>
             <option value="3">Win2022Datacenter</option>
@@ -28,13 +30,64 @@
             <option value="7">Win2012R2Datacenter</option>
             <option value="8">Win2012Datacenter</option>
             <option value="9">Win2008R2SP1</option>
-          </select>
-          <legend>Adminstrator account</legend>
-          <div class="mb-3">
+          </select></fieldset> <br>
+
+          <fieldset class="row mb-3">
+        <legend>Adminstrator account</legend>
+        <div class="mb-3">
             <label for="Username" class="form-label">Username</label>
-            <input type="Username" class="form-control">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            <input type="Username" class="form-control" placeholder="LocalAdmin" required>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="RDM recommended" required>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Confirm password</label>
+            <input type="confirm password" class="form-control" id="exampleInputPassword1" placeholder="RDM recommended" required>
+        </fieldset><br>
+
+
+            <div class="mb-3 form-check"> 
+                <fieldset class="row mb-3">
+                <legend>Disk and Networking</legend>
+                <select class="disk size" aria-label="Default select example">
+                    <option selected>Choose Disk size </option>
+                    <option value="1">image default 256 GiB (P15)</option>
+                    <option value="2">30 GiB</option>
+                    <option value="3">32 GiB (P4)</option>
+                    <option value="4">64 GiB (P6)</option>
+                    <option value="5">128 GiB (P10)</option>
+                    <option value="6">512 GiB (P20)</option>
+                    <option value="7">1 TiB (P30)</option>
+                    <option value="8">2 TiB (P40)</option>
+                  </select> 
+            <div class="mb-3">
+                <label for="Virtual Network" class="form-label">Virtual Network</label>
+                <input type="Virtual Network" class="form-control" placeholder="Name" required>
+            <div class="mb-3">
+                <label for="subent" class="subnetl">Subnet</label>
+                <input type="subnet" class="form-control" placeholder="Address prefix" required>
+                    </div></fieldset><br>
+
+                    <fieldset class="row mb-3">
+                      <legend class="col-form-label col-sm-2 pt-0">Boot diagnostics</legend>
+                      <div class="col-sm-10">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+                          <label class="form-check-label" for="gridRadios1">
+                            Enable with managed storage account (recommended)
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                          <label class="form-check-label" for="gridRadios2">
+                            Enable with custom storage account
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                          <label class="form-check-label" for="gridRadios2">
+                            Disable
+                        </fieldset> <br>
+                        
+
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
   </p>
