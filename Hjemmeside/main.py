@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import MySQLdb.cursors, re
 from flask_bcrypt import Bcrypt
+import json
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.secret_key = 'mikkelersej'
@@ -71,12 +72,13 @@ def register():
 @app.route('/home')
 def home():
     if 'loggedin' in session:
-        return render_template('home.html', username=session['username'], Graph=Graph)
+        return render_template('home.html', username=session['username'])
     return redirect(url_for('login'))
 
-@app.route('/form')
+@app.route('/form', methods=['POST', 'GET'])
 def form():
     if 'loggedin' in session:
         return render_template('form.html', username=session['username'])
+    return redirect(url_for('login'))
     
 app.run(debug=True) #ssl_context=('cert.pem', 'key.pem')

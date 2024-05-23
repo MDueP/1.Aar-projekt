@@ -5,8 +5,37 @@
 {% block content %}
 <h2>Azure VM Creation </h2>
 
-<p>Hej {{ username }}! <br>
+<p>Hello {{ username }}! <br>
     This is the standard Form for Azure Virtual Machine Creation
-</p>
 
+
+
+      <div class="mb-3">
+        <label for="Resource group" class="form-label">Resource group</label>
+        <input type="Resource group" class="form-control">
+      <div class="mb-3">
+        <label for=" Virtual machine name" class="form-label"> Virtual machine name</label>
+        <input type=" Virtual machine name" class="form-control" id="Virtual machine name">
+      <div class="mb-3 form-check"> 
+        <select class="image" aria-label="Default select example">
+            <option selected>image </option>
+            <option value="1">Debian11</option>
+            <option value="2">Ubuntu2204</option>
+            <option value="3">Win2022Datacenter</option>
+            <option value="4">Win2022AzureEditionCore</option>
+            <option value="5">Win2019Datacenter</option>
+            <option value="6">Win2016Datacenter</option>
+            <option value="7">Win2012R2Datacenter</option>
+            <option value="8">Win2012Datacenter</option>
+            <option value="9">Win2008R2SP1</option>
+          </select>
+          <legend>Adminstrator account</legend>
+          <div class="mb-3">
+            <label for="Username" class="form-label">Username</label>
+            <input type="Username" class="form-control">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+  </p>
 {% endblock %}
