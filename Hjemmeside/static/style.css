@@ -131,7 +131,7 @@ body.loggedin {
     border-bottom: 1px solid #e0e0e3;
     color:#c1c4c8;
 }
-.content > p, .content > div {
+.content > p, .content > div, .content > form {
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
     margin: 25px 0;
     padding: 25px;

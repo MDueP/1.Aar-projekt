@@ -78,6 +78,11 @@ def home():
 @app.route('/form', methods=['POST', 'GET'])
 def form():
     if 'loggedin' in session:
+        if request.method == 'POST':
+            vm_name = request.form.get("vm_name")
+            vm_data = json.dumps({"vm_name": vm_name})
+            print(vm_data)
+            return render_template('form.html', username=session['username'], vm_data=vm_data)
         return render_template('form.html', username=session['username'])
     return redirect(url_for('login'))
     
