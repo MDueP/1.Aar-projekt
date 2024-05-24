@@ -14,23 +14,22 @@
     <fieldset class="row mb-3">
       <legend>Basics</legend>
       <label for="Resource group" class="form-label">Resource group</label>
-      <input type="Resource group" class="form-control" id="resource_group" name="resource_group" placeholder="Name">
+      <input type="text" class="form-control" id="resource_group" name="resource_group" placeholder="Name">
     <div class="mb-3">
       <label for=" vm_name" class="form-label"> Virtual machine</label>
       <input type="text" class="form-control" id="vm_name" name="vm_name" placeholder="Name">
     </div>
     <div class="mb-3 form-check"> 
-      <select class="form-select" aria-label="Default select example">
+    <!--Information for values https://learn.microsoft.com/en-us/azure/virtual-machines/windows/cli-ps-findimage -->
+      <select class="form-select" name="OSImage" id="OSImage">
         <option selected>Choose OSImage </option>
-        <option value="1">Debian11</option>
-        <option value="2">Ubuntu2204</option>
-        <option value="3">Win2022Datacenter</option>
-        <option value="4">Win2022AzureEditionCore</option>
-        <option value="5">Win2019Datacenter</option>
-        <option value="6">Win2016Datacenter</option>
-        <option value="7">Win2012R2Datacenter</option>
-        <option value="8">Win2012Datacenter</option>
-        <option value="9">Win2008R2SP1</option>
+        <option value="Debian-11;Debian;11-backports-gen2">Debian11</option>
+        <option value="0001-com-ubuntu-server-jammy;Canonical;22_04-lts-gen2">Ubuntu2204</option>
+        <option value="WindowsServer;MicrosoftWindowsServer;2022-Datacenter">Win2022Datacenter</option>
+        <option value="WindowsServer;MicrosoftWindowsServer;2022-datacenter-azure-edition-core">Win2022AzureEditionCore</option>
+        <option value="WindowsServer;MicrosoftWindowsServer;2019-Datacenter">Win2019Datacenter</option>
+        <option value="WindowsServer;MicrosoftWindowsServer;2016-Datacenter">Win2016Datacenter</option>
+        <option value="WindowsServer;MicrosoftWindowsServer;2012-Datacenter ">Win2012Datacenter</option>
       </select>
     </div>
     </fieldset>
@@ -46,8 +45,8 @@
         <input type="password" class="form-control" id="admin_password" name="admin_password" placeholder="RDM recommended">
       </div>
       <div class="mb-3">
-        <label for="confirm_password" class="form-label">Confirm password</label>
-        <input type="confirm password" class="form-control" id="confirm_password" name="confirm_password" placeholder="RDM recommended">
+        <label for="admin_password" class="form-label">Confirm password</label>
+        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="RDM recommended">
       </div>
     </fieldset>
     <br>
@@ -55,16 +54,16 @@
       <legend>Disk and Networking</legend>
       <div class="mb-3 form-check"> 
         <label for="disk_size" class="form-label">Choose Disk Size</label>
-        <select class="disk size" aria-label="Default select example">
+        <select class="disk size" name="disk_size" id="disk_size">
             <option selected>Choose Disk size </option>
-            <option value="1">image default 256 GiB (P15)</option>
-            <option value="2">30 GiB</option>
-            <option value="3">32 GiB (P4)</option>
-            <option value="4">64 GiB (P6)</option>
-            <option value="5">128 GiB (P10)</option>
-            <option value="6">512 GiB (P20)</option>
-            <option value="7">1 TiB (P30)</option>
-            <option value="8">2 TiB (P40)</option>
+            <option value="256 GiB (P15)">default 256 GiB (P15)</option>
+            <option value="30 GiB">30 GiB</option>
+            <option value="33 GiB (P4)">32 GiB (P4)</option>
+            <option value="64 GiB (P6)">64 GiB (P6)</option>
+            <option value="128 GiB (P10)">128 GiB (P10)</option>
+            <option value="512 GiB (P20)">512 GiB (P20)</option>
+            <option value="1 TiB (P30)">1 TiB (P30)</option>
+            <option value="2 TiB (P40)">2 TiB (P40)</option>
           </select>
       </div>
       <div class="mb-3">
@@ -73,34 +72,10 @@
       </div>
       <div class="mb-3">
         <label for="subnet" class="form-label">Subnet</label>
-        <input type="text" class="form-control" id="subnet" name="subnet" placeholder="Address prefix">
+        <input type="text" class="form-control" id="subnet" name="subnet" placeholder="Name">
       </div>
     </fieldset>
     <br>
-    <fieldset class="row mb-3">
-      <legend class="col-form-label col-sm-2 pt-0">Boot diagnostics</legend>
-      <div class="col-sm-10">
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="boot_diagnostics" id="boot_diagnostics1" value="option1" checked>
-          <label class="form-check-label" for="boot_diagnostics1">
-            Enable with managed storage account (recommended)
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="boot_diagnostics" id="boot_diagnostics2" value="option2">
-         <label class="form-check-label" for="boot_diagnostics2">
-           Enable with custom storage account
-         </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="boot_diagnostics" id="boot_diagnostics3" value="option2">
-          <label class="form-check-label" for="boot_diagnostics3">
-           Disable
-          </label>
-        </div>
-      </div>
-    </fieldset>
-    <br>      
     <button type="submit" value="form" class="btn btn-primary">Submit</button>     
   </div>
 </form>
