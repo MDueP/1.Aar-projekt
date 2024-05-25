@@ -121,56 +121,102 @@ def form():
             if admin_password != confirm_password:
                 msg = "Passwords do not match"
                 return render_template('form.html', username=session['username'], msg=msg)
-
             
             image_offer, image_publisher, image_sku = os_image.split(';')
             
-
             # Syntax for Shell Script
             # https://learn.microsoft.com/en-us/powershell/module/az.compute/new-azvm?view=azps-12.0.0
             shell_script = f"""
-            Connect-AzAccount
+Connect-AzAccount
             
-            #Azure Account - Info
-            $resourcegroup = '{resource_group}'
-            $location = 'euwest'
+#Azure Account - Info
+$resourcegroup = '{resource_group}'
+$location = 'westeurope'
             
-            #VM Account - Info
-            $adminUsername = "{admin_username}"
-            $adminPassword = ConvertTo-SecureString "{admin_password}" -AsPlainText -Force
+#VM Account - Info
+$adminUsername = "{admin_username}"
+$adminPassword = ConvertTo-SecureString "{admin_password}" -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential ($adminUsername, $adminPassword)
             
-            #VM - Info
-            $vmName = "{vm_name}"
-            $vmSize = "Standard_D2ds_v5"
-            $diskSize = 127
-            $image = "{image_publisher}:{image_offer}:{image_sku}"
+#VM - Info
+$vmName = "{vm_name}"
+
+$imagepub = "{image_publisher}"
+$imageoffer = "{image_offer}"
+$imagesku = "{image_sku}"
             
-            #Networking
-            $Subnet = New-AzVirtualNetworkSubnetConfig -Name {subnet} -AddressPrefix "10.0.0.0/24"
-            $vnet_name = '{virtual_network}'
-            
-            New-AzResourceGroup -Name $resourcegroup -Location $location
-            
-            New-AzVirtualNetwork -Name $vnet_name -ResourceGroupName $resourcegroup -Location $location -AddressPrefix "10.0.0.0/16" -Subnet $Subnet
-            
-            New-AzVm `
-                -ResourceGroupName $resourceGroup `
-                -Name $vmName `
-                -ImageName "{image_publisher}:{image_offer}:{image_sku}" `
-                -Credential (New-Object System.Management.Automation.PSCredential ($adminUsername, (ConvertTo-SecureString $adminPassword -AsPlainText -Force))) `
-                -Size Standard_D2ds_v5 `
-                -Location $location `
-                -VirtualNetworkName $virtualNetwork `
-                -SubnetName $subnet `
-                -PublicIpAddressName "$vmName-ip" `
-                -DataDiskSizeInGB $diskSize  
-                -SecurityType "Standard"
-                -NetworkInterfaceDeleteOption "Delete"
-                -EnableAcceleratedNetworking
-                -SystemAssignedIdentity
-                -AllocationMethod "Static"
-            Add-AzVMDataDisk -VM $vmName -Name $vmName_disk1 -DiskSizeInGB {disk_size.split()[0]} -CreateOption "Empty" -DeleteOption "Delete" 
-        """
+#Networking
+$subnet_name = '{subnet}'
+$vnet_name = '{virtual_network}'
+
+#Resource Group
+New-AzResourceGroup -Name $resourcegroup -Location $location
+
+#Vnet
+$subnet = New-AzVirtualNetworkSubnetConfig `
+    -Name $subnet_name `
+    -AddressPrefix "10.0.0.0/24" 
+
+New-AzVirtualNetwork -Name $vnet_name `
+    -ResourceGroupName $resourcegroup `
+    -Location $location `
+    -AddressPrefix "10.0.0.0/16" `
+    -Subnet $subnet
+    
+$Subnet = Get-AzVirtualNetwork -Name $vnet_name -ResourceGroupName $resourcegroup
+
+$publicIP = New-AzPublicIPAddress `
+    -Name "$vmName-ip" `
+    -ResourceGroupName $resourcegroup `
+    -Location $location `
+    -AllocationMethod Static `
+    -Sku Standard
+
+$nic = New-AzNetworkInterface `
+    -Name "$vmName-nic" `
+    -ResourceGroupName $resourcegroup `
+    -Location $location `
+    -SubnetId $Subnet.Subnets[0].Id `
+    -PublicIpAddressId $publicIp.Id
+    
+#Config of the virtual machine -VMSize has to be changed to v5. We only have access to deploy up to v4
+$vm_config = New-AzVMConfig `
+    -VMName $vmName `
+    -VMSize "Standard_D2ds_v4" `
+    -SecurityType "Standard" `
+    -IdentityType "SystemAssigned"
+
+$vm_config = Set-AzVMOperatingSystem `
+    -VM $vm_config `
+    -ComputerName $vmName `
+    -Credential $credential
+
+$vm_config = Set-AzVMSourceImage `
+    -VM $vm_config `
+    -PublisherName "$imagepub" `
+    -Offer "$imageoffer" `
+    -Skus "$imagesku" `
+    -Version "latest"
+    
+    
+#Adds the networkinterface to the VM
+$vm_config = Add-AzVMNetworkInterface `
+    -VM $vm_config `
+    -Id $nic.Id
+
+$vm_config = Add-AzVMDataDisk `
+    -VM $vm_config `
+    -Name "disk1" `
+    -DiskSizeInGB {disk_size} `
+    -CreateOption "Empty" `
+    -DeleteOption "Delete" `
+    -Lun 1
+
+New-AzVM `
+    -ResourceGroupName $resourcegroup `
+    -Location $location `
+    -VM $vm_config
+"""
             powershell_path =  "C:/Users/Due/Dropbox/IT-Tek/1.års Projekt/Programmering/Hjemmeside/vm_create.ps1"
             with open(powershell_path, 'w') as ps_file:
                 ps_file.write(shell_script)
