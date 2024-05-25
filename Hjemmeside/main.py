@@ -3,7 +3,6 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import MySQLdb.cursors, re
 from flask_bcrypt import Bcrypt
-import json
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.secret_key = 'mikkelersej'
@@ -14,7 +13,27 @@ app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'pythonlogin'
 
 mysql = MySQL(app)
-    
+
+restricted_usernames = {"administrator", "admin", "user", "user1", "test", "user2", "test1", "user3", "admin1",
+                         "1", "123", "a", "actuser", "adm", "admin2", "aspnet", "backup", "console", "david", 
+                         "guest", "john", "owner", "root", "server", "sql", "support", "support_388945a0", 
+                         "sys", "test2", "test3", "user4", "user5"}
+def valid_username(username):
+    windows_invalid = re.compile(r'[/"\[\]:|<>+=;,?*@&]')
+    linux_invalid = re.compile(r'^[a-zA-Z0-9_]+$')
+    if username.lower() in restricted_usernames:
+        return False, "Username is not allowed"
+    if windows_invalid.search(username) or username.endswith('.'):
+        return False, "Cannot contain special characters /""[]:|<>+=;,?*@&"
+    if not linux_invalid.match(username):
+        return False, "Username must only contain letters, numbers, hyphens, and underscores"
+    if len(username) > 20:
+        return False, "Username exceeds maximum length"
+    return True, ""
+def valid_password(password):
+    password_contains = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{12,123}$')
+    return password_contains.match(password)
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     msg = ''
@@ -78,6 +97,7 @@ def home():
 @app.route('/form', methods=['POST', 'GET'])
 def form():
     if 'loggedin' in session:
+        msg = ''
         if request.method == 'POST':
             resource_group = request.form.get("resource_group")
             vm_name = request.form.get("vm_name")
@@ -89,34 +109,23 @@ def form():
             virtual_network = request.form.get("virtual_network")
             subnet = request.form.get("subnet")
             
+            is_valid, error_msg = valid_username(admin_username)
+            if not is_valid:
+                msg = error_msg
+                return render_template('form.html', username=session['username'], msg=msg)
+            
+            if not valid_password(admin_password):
+                msg = "Password is not complex enough"
+                return render_template('form.html', username=session['username'], msg=msg)
+            
+            if admin_password != confirm_password:
+                msg = "Passwords do not match"
+                return render_template('form.html', username=session['username'], msg=msg)
+
+            
             image_offer, image_publisher, image_sku = os_image.split(';')
             
-            parameters_json = "C:/Users/Due/Dropbox/IT-Tek/1.års Projekt/Programmering/Hjemmeside/parameters.json"
-            template_json = "C:/Users/Due/Dropbox/IT-Tek/1.års Projekt/Programmering/Hjemmeside/template.json"
-            
-            
-            with open(parameters_json, 'r') as file:
-                parameters = json.load(file)
-            parameters['parameters']['virtualMachineRG']['value'] = resource_group
-            parameters['parameters']['resourceGroup']['value'] = resource_group
-            parameters['parameters']['virtualMachineName']['value'] = vm_name
-            parameters['parameters']['virtualMachineComputerName']['value'] = vm_name
-            parameters['parameters']['adminUsername']['value'] = admin_username
-            if admin_password == confirm_password:
-                parameters['parameters']['adminPassword']['value'] = admin_password
-            parameters['parameters']['dataDiskResources']['value'][0]['properties']['diskSizeGB'] = int(disk_size.split()[0])
-            parameters['parameters']['virtualNetworkName']['value'] = virtual_network
-            parameters['parameters']['subnetName']['value'] = subnet
-                      
-            with open(parameters_json, 'w') as file:
-                json.dump(parameters, file, indent=4)
-            with open(template_json, 'r') as file:
-                template = json.load(file)
-            template['resources'][3]['properties']['storageProfile']['imageReference']['publisher'] = image_publisher
-            template['resources'][3]['properties']['storageProfile']['imageReference']['offer'] = image_offer
-            template['resources'][3]['properties']['storageProfile']['imageReference']['sku'] = image_sku
-            with open(template_json, 'w') as file:
-                json.dump(template, file, indent=4)
+
             # Syntax for Shell Script
             # https://learn.microsoft.com/en-us/powershell/module/az.compute/new-azvm?view=azps-12.0.0
             shell_script = f"""
@@ -154,8 +163,7 @@ def form():
                 -VirtualNetworkName $virtualNetwork `
                 -SubnetName $subnet `
                 -PublicIpAddressName "$vmName-ip" `
-                -DataDiskSizeInGB $diskSize
-                -AvailabilitySetName     
+                -DataDiskSizeInGB $diskSize  
                 -SecurityType "Standard"
                 -NetworkInterfaceDeleteOption "Delete"
                 -EnableAcceleratedNetworking
@@ -166,9 +174,9 @@ def form():
             powershell_path =  "C:/Users/Due/Dropbox/IT-Tek/1.års Projekt/Programmering/Hjemmeside/vm_create.ps1"
             with open(powershell_path, 'w') as ps_file:
                 ps_file.write(shell_script)
-            
-            return render_template('form.html', username=session['username'], vm_data=parameters)
-        return render_template('form.html', username=session['username'])
+            msg = "Form submitted successfully"
+            return render_template('form.html', username=session['username'], msg=msg)
+        return render_template('form.html', username=session['username'], msg=msg)
     return redirect(url_for('login'))
     
 app.run(debug=True) #ssl_context=('cert.pem', 'key.pem')

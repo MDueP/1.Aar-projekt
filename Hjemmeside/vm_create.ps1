@@ -33,9 +33,7 @@
                 -VirtualNetworkName $virtualNetwork `
                 -SubnetName $subnet `
                 -PublicIpAddressName "$vmName-ip" `
-                -DataDiskSizeInGB $diskSize
-                -AvailabilitySetName     
-                -LicenseType
+                -DataDiskSizeInGB $diskSize     
                 -SecurityType "Standard"
                 -NetworkInterfaceDeleteOption "Delete"
                 -EnableAcceleratedNetworking
