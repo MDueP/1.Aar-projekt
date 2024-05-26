@@ -1,18 +1,27 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import MySQLdb.cursors, re
 from flask_bcrypt import Bcrypt
+import os
+
+#https://stackoverflow.com/questions/509742/change-directory-to-the-directory-of-a-python-script 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
+################################################################################################
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.secret_key = 'mikkelersej'
-
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'pythonlogin'
 
 mysql = MySQL(app)
+
+
+cert_file = os.path.abspath('cert.pem')
+pkey_file = os.path.abspath('key.pem')
 
 restricted_usernames = {"administrator", "admin", "user", "user1", "test", "user2", "test1", "user3", "admin1",
                          "1", "123", "a", "actuser", "adm", "admin2", "aspnet", "backup", "console", "david", 
@@ -221,8 +230,8 @@ New-AzVM `
             with open(powershell_path, 'w') as ps_file:
                 ps_file.write(shell_script)
             msg = "Form submitted successfully"
-            return render_template('form.html', username=session['username'], msg=msg)
+            return send_file(powershell_path, as_attachment=True, download_name="vm_create.ps1")
         return render_template('form.html', username=session['username'], msg=msg)
     return redirect(url_for('login'))
     
-app.run(debug=True) #ssl_context=('cert.pem', 'key.pem')
+app.run(ssl_context=(cert_file, pkey_file))
