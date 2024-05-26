@@ -31,9 +31,9 @@ def valid_username(username):
     windows_invalid = re.compile(r'[/"\[\]:|<>+=;,?*@&]')
     linux_invalid = re.compile(r'^[a-zA-Z0-9_]+$')
     if username.lower() in restricted_usernames:
-        return False, "Username is not allowed"
+        return False, "That username is too generic and is not allowed"
     if windows_invalid.search(username) or username.endswith('.'):
-        return False, "Cannot contain special characters /""[]:|<>+=;,?*@&"
+        return False, "Username cannot contain special characters /""[]:|<>+=;,?*@&"
     if not linux_invalid.match(username):
         return False, "Username must only contain letters, numbers, hyphens, and underscores"
     if len(username) > 20:
@@ -121,21 +121,18 @@ def form():
             is_valid, error_msg = valid_username(admin_username)
             if not is_valid:
                 msg = error_msg
-                return render_template('form.html', username=session['username'], msg=msg)
-            
-            if not valid_password(admin_password):
+
+            elif not valid_password(admin_password):
                 msg = "Password is not complex enough"
-                return render_template('form.html', username=session['username'], msg=msg)
-            
-            if admin_password != confirm_password:
+
+            elif admin_password != confirm_password:
                 msg = "Passwords do not match"
-                return render_template('form.html', username=session['username'], msg=msg)
-            
-            image_offer, image_publisher, image_sku = os_image.split(';')
+            else:
+                image_offer, image_publisher, image_sku = os_image.split(';')
             
             # Syntax for Shell Script
             # https://learn.microsoft.com/en-us/powershell/module/az.compute/new-azvm?view=azps-12.0.0
-            shell_script = f"""
+                shell_script = f"""
 Connect-AzAccount
             
 #Azure Account - Info
@@ -226,11 +223,11 @@ New-AzVM `
     -Location $location `
     -VM $vm_config
 """
-            powershell_path =  "C:/Users/Due/Dropbox/IT-Tek/1.års Projekt/Programmering/Hjemmeside/vm_create.ps1"
-            with open(powershell_path, 'w') as ps_file:
-                ps_file.write(shell_script)
-            msg = "Form submitted successfully"
-            return send_file(powershell_path, as_attachment=True, download_name="vm_create.ps1")
+                powershell_path =  "C:/Users/Due/Dropbox/IT-Tek/1.års Projekt/Programmering/Hjemmeside/vm_create.ps1"
+                with open(powershell_path, 'w') as ps_file:
+                    ps_file.write(shell_script)
+                msg = "Form submitted successfully"
+                return send_file(powershell_path, as_attachment=True, download_name="vm_create.ps1")
         return render_template('form.html', username=session['username'], msg=msg)
     return redirect(url_for('login'))
     

@@ -2,7 +2,7 @@
 Connect-AzAccount
             
 #Azure Account - Info
-$resourcegroup = 'rg-itm8'
+$resourcegroup = 'rg-vm8'
 $location = 'westeurope'
             
 #VM Account - Info
@@ -11,14 +11,14 @@ $adminPassword = ConvertTo-SecureString "LocalAdmin1!" -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($adminUsername, $adminPassword)
             
 #VM - Info
-$vmName = "vm-itm8"
+$vmName = "vm-im8"
 
 $imagepub = "MicrosoftWindowsServer"
 $imageoffer = "WindowsServer"
-$imagesku = "2022-datacenter-azure-edition-core"
+$imagesku = "2019-Datacenter"
             
 #Networking
-$subnet_name = 'subnet1'
+$subnet_name = 'vnet2'
 $vnet_name = 'vnet1'
 
 #Resource Group
@@ -79,7 +79,7 @@ $vm_config = Add-AzVMNetworkInterface `
 $vm_config = Add-AzVMDataDisk `
     -VM $vm_config `
     -Name "disk1" `
-    -DiskSizeInGB 256 `
+    -DiskSizeInGB 64 `
     -CreateOption "Empty" `
     -DeleteOption "Delete" `
     -Lun 1
