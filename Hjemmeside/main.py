@@ -225,11 +225,11 @@ New-AzVM `
     -Location $location `
     -VM $vm_config 
 """
-                powershell_path =  "C:/Users/Due/Dropbox/IT-Tek/1.års Projekt/Programmering/Hjemmeside/vm_create.ps1"
+                powershell_path =  os.path.abspath('vm_create.ps1')
                 with open(powershell_path, 'w') as ps_file:
                     ps_file.write(shell_script)
                 msg = "Form submitted successfully"
-                return send_file(powershell_path, as_attachment=True, download_name="vm_create.ps1")
+                return send_file(powershell_path, as_attachment=True, download_name='vm_create.ps1')
         return render_template('form.html', username=session['username'], msg=msg)
     return redirect(url_for('login'))
     
