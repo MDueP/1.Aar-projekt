@@ -117,7 +117,7 @@ def form():
             disk_size = request.form.get("disk_size")
             virtual_network = request.form.get("virtual_network")
             subnet = request.form.get("subnet")
-            
+
             is_valid, error_msg = valid_username(admin_username)
             if not is_valid:
                 msg = error_msg
@@ -129,7 +129,8 @@ def form():
                 msg = "Passwords do not match"
             else:
                 image_offer, image_publisher, image_sku = os_image.split(';')
-            
+                if image_offer == "Debian-11" or "0001-com-ubuntu-server-jammy":
+                    linux = "-Linux"
             # Syntax for Shell Script
             # https://learn.microsoft.com/en-us/powershell/module/az.compute/new-azvm?view=azps-12.0.0
                 shell_script = f"""
@@ -195,7 +196,8 @@ $vm_config = New-AzVMConfig `
 $vm_config = Set-AzVMOperatingSystem `
     -VM $vm_config `
     -ComputerName $vmName `
-    -Credential $credential
+    -Credential $credential `
+    {linux}
 
 $vm_config = Set-AzVMSourceImage `
     -VM $vm_config `
@@ -221,7 +223,7 @@ $vm_config = Add-AzVMDataDisk `
 New-AzVM `
     -ResourceGroupName $resourcegroup `
     -Location $location `
-    -VM $vm_config
+    -VM $vm_config 
 """
                 powershell_path =  "C:/Users/Due/Dropbox/IT-Tek/1.års Projekt/Programmering/Hjemmeside/vm_create.ps1"
                 with open(powershell_path, 'w') as ps_file:
