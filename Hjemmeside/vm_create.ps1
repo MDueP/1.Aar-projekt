@@ -2,7 +2,7 @@
 Connect-AzAccount
             
 #Azure Account - Info
-$resourcegroup = 'rg-8'
+$resourcegroup = 'eg-vm8it'
 $location = 'westeurope'
             
 #VM Account - Info
@@ -11,11 +11,11 @@ $adminPassword = ConvertTo-SecureString "LocalAdmin1!" -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($adminUsername, $adminPassword)
             
 #VM - Info
-$vmName = "vm-8"
+$vmName = "adgfhuu"
 
-$imagepub = "Debian"
-$imageoffer = "Debian-11"
-$imagesku = "11-backports-gen2"
+$imagepub = "MicrosoftWindowsServer"
+$imageoffer = "WindowsServer"
+$imagesku = "2022-datacenter-azure-edition-core"
             
 #Networking
 $subnet_name = 'subnet'
@@ -61,7 +61,8 @@ $vm_config = New-AzVMConfig `
 $vm_config = Set-AzVMOperatingSystem `
     -VM $vm_config `
     -ComputerName $vmName `
-    -Credential $credential
+    -Credential $credential `
+    
 
 $vm_config = Set-AzVMSourceImage `
     -VM $vm_config `
@@ -87,5 +88,4 @@ $vm_config = Add-AzVMDataDisk `
 New-AzVM `
     -ResourceGroupName $resourcegroup `
     -Location $location `
-    -VM $vm_config `
-    -Linux
+    -VM $vm_config 

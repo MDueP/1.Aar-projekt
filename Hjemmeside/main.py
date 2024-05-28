@@ -129,8 +129,10 @@ def form():
                 msg = "Passwords do not match"
             else:
                 image_offer, image_publisher, image_sku = os_image.split(';')
-                if image_offer == "Debian-11" or "0001-com-ubuntu-server-jammy":
+                if image_offer == "Debian-11" or image_offer == "0001-com-ubuntu-server-jammy":
                     linux = "-Linux"
+                else:
+                    linux = ""
             # Syntax for Shell Script
             # https://learn.microsoft.com/en-us/powershell/module/az.compute/new-azvm?view=azps-12.0.0
                 shell_script = f"""
