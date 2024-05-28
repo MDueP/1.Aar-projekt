@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from flask_mysqldb import MySQL
-import MySQLdb.cursors
-import MySQLdb.cursors, re
+import MySQLdb.cursors, re, os
 from flask_bcrypt import Bcrypt
-import os
 
 #https://stackoverflow.com/questions/509742/change-directory-to-the-directory-of-a-python-script 
 script_dir = os.path.dirname(os.path.abspath(__file__))

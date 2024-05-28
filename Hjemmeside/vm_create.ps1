@@ -2,7 +2,7 @@
 Connect-AzAccount
             
 #Azure Account - Info
-$resourcegroup = 'eg-vm8it'
+$resourcegroup = 'rg-itm8'
 $location = 'westeurope'
             
 #VM Account - Info
@@ -11,11 +11,11 @@ $adminPassword = ConvertTo-SecureString "LocalAdmin1!" -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($adminUsername, $adminPassword)
             
 #VM - Info
-$vmName = "adgfhuu"
+$vmName = "vm-itm8"
 
 $imagepub = "MicrosoftWindowsServer"
 $imageoffer = "WindowsServer"
-$imagesku = "2022-datacenter-azure-edition-core"
+$imagesku = "2022-Datacenter"
             
 #Networking
 $subnet_name = 'subnet'
