@@ -3,10 +3,10 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors, re, os
 from flask_bcrypt import Bcrypt
 
-#https://stackoverflow.com/questions/509742/change-directory-to-the-directory-of-a-python-script 
+
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
-################################################################################################
+
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.secret_key = 'mikkelersej'
@@ -131,8 +131,8 @@ def form():
                     linux = "-Linux"
                 else:
                     linux = ""
-            # Syntax for Shell Script
-            # https://learn.microsoft.com/en-us/powershell/module/az.compute/new-azvm?view=azps-12.0.0
+
+              
                 shell_script = f"""
 Connect-AzAccount
             
