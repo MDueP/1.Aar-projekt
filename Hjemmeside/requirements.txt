@@ -1,9 +1,8 @@
-# requirements.txt
-
 adal==1.2.7
 antlr4-python3-runtime==4.13.1
 applicationinsights==0.11.10
 argcomplete==3.1.6
+azure-core==1.30.2
 bcrypt==4.1.2
 blinker==1.7.0
 certifi==2024.2.2
@@ -60,6 +59,7 @@ pyparsing==3.1.2
 pyreadline3==3.4.1
 PySocks==1.7.1
 python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
 pywin32==306
 PyYAML==6.0.1
 requests==2.31.0
