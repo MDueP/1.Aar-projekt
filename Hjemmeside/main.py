@@ -38,7 +38,7 @@ restricted_usernames = {"administrator", "admin", "user", "user1", "test", "user
 
 def valid_username(username):
     windows_invalid = re.compile(r'[/"\[\]:|<>+=;,?*@&]')
-    linux_invalid = re.compile(r'^[a-zA-Z0-9_]+$')
+    linux_invalid = re.compile(r'^[a-zA-Z0-9]+$')
     if username.lower() in restricted_usernames:
         return False, "That username is too generic and is not allowed"
     if windows_invalid.search(username) or username.endswith('.'):
@@ -256,4 +256,4 @@ New-AzVM `
     return redirect(url_for('login'))
 
 
-app.run()
+app.run(host=('0.0.0.0'), ssl_context=(cert_file, pkey_file))
